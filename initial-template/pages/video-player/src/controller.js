@@ -3,6 +3,8 @@ export default class Controller{
     #worker
     #camera
     #blinkCounter = 0
+    #faceDetectionOn = false
+    #blinkFrames = 0
     constructor({view, worker, camera}){
         this.#view = view
         this.#camera = camera
@@ -13,18 +15,20 @@ export default class Controller{
     #configureWorker(worker) {
         let ready = false
         worker.onmessage = ({data}) =>{
-            console.log('recebi no controller',data)
+            // console.log('recebi no controller',data)
             if(data === 'READY'){
                 this.#view.enableButton()
                 ready = true
                 return
             }
             const blinked = data.blinked            
-            console.log('blinked',blinked) 
-            if(blinked){
+            // console.log('blinked',blinked, 'frames',this.#blinkFrames) 
+            if(blinked) this.#blinkFrames +=1
+            if(this.#blinkFrames >=1){
                 this.#blinkCounter += blinked
                 this.#view.tooglePlayVideo()
                 this.log()
+                this.#blinkFrames = 0
             }
         }
 
@@ -46,13 +50,15 @@ export default class Controller{
         console.log('Estou funcioando')
     }
 
-    loop(){
-        const video = this.#camera.video
-        const img = this.#view.getVideoFrame(video)
-        this.#worker.send(img)
-        this.log('detecting eye blink')
-
-        setTimeout(()=> this.loop(), 100)
+    loop(){        
+        if(this.#faceDetectionOn){
+            const video = this.#camera.video
+            const img = this.#view.getVideoFrame(video)
+            this.#worker.send(img)
+            this.log('detecting eye blink')
+    
+            setTimeout(()=> this.loop(), 100)
+        }        
     }
 
     log(text){
@@ -61,8 +67,18 @@ export default class Controller{
     }
 
     onBtnStart(){
+        if(this.#faceDetectionOn){            
+            this.#faceDetectionOn = false
+            this.#view.changeButtonText('Iniciar reconhecimento')
+            this.#blinkCounter = 0
+            this.log('parado')
+            return
+        }
+
         this.log('Initializing face detection...')
         this.#blinkCounter = 0
+        this.#faceDetectionOn = true
         this.loop()
+        this.#view.changeButtonText('Parar reconhecimento')
     }
 }

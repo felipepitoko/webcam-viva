@@ -30,6 +30,11 @@ export default class View{
     configureOnBtnClick(fn){
         this.#btnInit.addEventListener('click',fn)
     }
+
+    changeButtonText(text){
+        this.#btnInit.innerHTML = text
+    }
+    
     log(text){
         this.#statusElement.innerHTML = text
     }
