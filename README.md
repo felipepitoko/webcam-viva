@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # JSExpertMax Gesture Controller - Semana JS Expert 7.0
 
 Seja bem vindo(a) à sétima Semana Javascript Expert. Este é o código inicial para iniciar nossa jornada.
@@ -64,3 +65,7 @@ Marque esse projeto com uma estrela 🌟
   
 ### Créditos ao Layout
 - Interface baseada no projeto [Streaming Service](https://codepen.io/Gunnarhawk/pen/vYJEwoM) de [gunnarhawk](https://github.com/Gunnarhawk)
+=======
+# webcam-viva
+Usar gestos para controlar a UI de uma aplicação Javascript.
+>>>>>>> be2cf14fe15802c7e98f7454d8010b8481069020
